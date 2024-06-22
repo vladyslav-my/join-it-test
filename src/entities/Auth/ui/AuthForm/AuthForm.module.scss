@@ -1,0 +1,85 @@
+.AuthForm {
+   position: relative;
+
+   padding: rem(90) rem(15);
+
+   border-radius: rem(15);
+   box-shadow: 0 0 rem(40.5) rem(-2) rgba(63, 64, 155, 0.40);
+
+   &__container {
+      display: flex;
+      flex-direction: column;
+   }
+
+   &__fields {
+      display: grid;
+      gap: rem(10);
+
+      margin-bottom: rem(40);
+   }
+
+   &__buttons {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: rem(10);
+   }
+
+   &__submit {
+      align-self: center;
+   }
+
+   &__statusError {
+      position: absolute;
+      top: rem(15);
+      left: 0;
+
+      display: flex;
+      justify-content: center;
+
+      width: 100%;
+      padding: 0 rem(15);
+
+      color: $redColor;
+
+      &_enter {
+         transition: opacity $primaryTransition;
+      }
+
+      &_enterFrom {
+         opacity: 0;
+      }
+
+      &_enterTo {
+         opacity: 1;
+      }
+
+      &_leave {
+         transition: opacity $primaryTransition;
+      }
+
+      &_leaveFrom {
+         opacity: 1;
+      }
+
+      &_leaveTo {
+         opacity: 0;
+      }
+   }
+}
+
+.StatusError {
+   display: flex;
+   align-items: center;
+   flex-direction: column;
+
+   text-align: center;
+
+   &__title {
+      font-size: rem(20);
+   }
+
+   &__text {
+
+   }
+}

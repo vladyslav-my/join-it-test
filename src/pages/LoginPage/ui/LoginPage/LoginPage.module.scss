@@ -1,0 +1,22 @@
+.LoginPage {
+   display: flex;
+   align-items: center;
+
+   height: 100vh;
+
+   &__container {
+      position: relative;
+
+      flex: 1 1 auto;
+   }
+   &__title {
+      position: absolute;
+      bottom: calc(100% + rem(40));
+      left: 50%;
+
+      width: 100%;
+      margin-bottom: 0 !important;
+
+      transform: translateX(-50%);
+   }
+}

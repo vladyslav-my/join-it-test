@@ -1,0 +1,371 @@
+.SecondaryField {
+   $p: &;
+   position: relative;
+
+   padding-top: em(21, 24);
+   padding-bottom: em(18, 24);
+
+   font-size: rem(24);
+
+   &_readOnly {
+      #{$p} {
+         &__input {
+            padding-right: em(5, 24);
+
+            pointer-events: none;
+         }
+      }
+   }
+
+   &_empty {
+      #{$p} {
+         &__placeholder {
+            top: 0;
+            left: 0;
+   
+            font-size: em(16, 24);
+         }
+
+         &__input {
+            &::placeholder {
+               opacity: 1;
+            }
+         }
+      }    
+   }
+
+   &_error {
+      #{$p} {
+         &__wrapper {
+            &:after, &:before {
+               background: $redColor;
+            }
+         }
+      }
+   }
+
+   &_success {
+      #{$p} {
+         &__wrapper {
+            &:after, &:before {
+               background: $greenColor;
+            }
+         }
+      }
+   }
+
+   &_warn {
+      #{$p} {
+         &__wrapper {
+            &:after, &:before {
+               background: $greenColor;
+            }
+         }
+      }
+   }
+
+   &:focus-within {
+      #{$p} {
+         &__placeholder {
+            top: 0;
+            left: 0;
+   
+            font-size: em(16, 24);
+         }    
+
+         &__wrapper {
+            &::before {
+               width: 100%;
+            }
+         }
+
+
+         &__input {
+            &::placeholder {
+               opacity: 1;
+            }
+         }
+      }        
+   }
+
+
+
+   &__icon {
+      width: em(20, 24);
+      height: em(20, 24);
+      fill: currentColor;
+   }
+
+
+   &__removeIcon {
+      width: em(14, 24);
+      height: em(14, 24);
+      fill: currentColor;
+
+      color: $redColor;
+   }
+
+
+   &__iconWrapper {
+      position: absolute;
+      
+
+      &_cross {
+         top: 0;
+         right: rem(30);
+      }
+
+      &_pen {
+         top: 0;
+         right: 0;
+      }
+
+
+      &_enter {
+         transition: opacity $primaryTransition, transform $primaryTransition;
+      }
+
+      &_enterFrom {
+         transform: scale(0.5);
+
+         opacity: 0;
+      }
+
+      &_enterTo {
+         transform: scale(1);
+
+         opacity: 1;
+      }
+
+      &_leave {
+         transition: opacity $primaryTransition, transform $primaryTransition;
+      }
+
+      &_leaveFrom {
+         transform: scale(1);
+
+         opacity: 1;
+      }
+
+      &_leaveTo {
+         transform: scale(0.5);
+
+         opacity: 0;
+      }
+   }
+
+   &__placeholder {
+      position: absolute;
+      top: em(21, 24);
+      left: em(3, 24);
+
+      transition: top, left, font-size, 0.35s ease;
+
+      line-height: em(21, 24);
+   }
+
+
+   &__wrapper {
+      position: relative;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      
+
+
+      &:before {
+         position: absolute;
+         z-index: 1;
+         bottom: 0;
+
+         width: 0;
+         height: em(3, 24);
+
+         content: "";
+         transition: width $primaryTransition, background $primaryTransition;
+
+         background: $blueColor;     
+      }
+
+      &:after {
+         position: absolute;
+         bottom: 0;
+
+         width: 100%;
+         height: em(2, 24);
+         
+         content: "";
+         transition: background $primaryTransition;
+
+         background: $blueColor;
+      }
+   }
+
+   &__input {
+      width: 100%;
+      padding-right: rem(60);
+
+      padding-left: em(3, 24);
+
+      transition: padding-right $primaryTransition;
+
+      border-bottom: $purpleColor solid em(2, 24);
+      background-color: transparent;
+
+      line-height: em(21, 24);
+
+      &::placeholder {
+         transition: opacity 0.35s ease;
+
+         opacity: 0;
+      }
+   }
+
+   &__error {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+
+      color: $redColor;
+
+      font-size: em(12, 24);
+
+
+      &_enter {
+         opacity: 0;
+
+         &_active {
+            opacity: 1;
+         }
+      }
+
+      &_exit {
+         opacity: 1;
+
+         &_active {
+            opacity: 0;
+         }
+      }
+ 
+   }
+
+   &__list {
+      position: absolute;
+      z-index: 1;
+      top: 100%;
+      
+   }
+}
+
+.List {
+   overflow-x: auto;
+
+   width: 100%;
+
+   max-height: rem(200);
+
+   border: rem(1) solid $blueColor;                                                                      
+   border-radius: rem(8);
+
+   background-color: $whiteColor;
+
+   font-size: rem(20);
+
+   &::-webkit-scrollbar {
+      width: rem(5); 
+      height: rem(5);
+   }
+    
+   &::-webkit-scrollbar-thumb {
+      border-radius: rem(50);
+      border-top-right-radius: rem(300);
+      border-bottom-right-radius: rem(300);
+
+      background-color: $blueColor;
+   }
+    
+   &::-webkit-scrollbar-track {
+      border-radius: rem(50);
+      border-top-right-radius: rem(300);
+      border-bottom-right-radius: rem(300);
+      box-shadow: inset 0 0 rem(4) rgba(0,0,0,0.2);
+   }
+   
+
+   > *:not(:last-child) {
+      &::after {
+         position: absolute;
+         bottom: 0;
+         left: 50%;
+
+         width: percent(467, 498);
+         height: em(1);
+
+         content: "";
+         transform: translateX(-50%);
+
+         background-color: $blueColor;
+      }
+   }
+   
+
+   &__item {
+      position: relative;
+
+      padding: em(5, 24) em(6, 24);
+
+      transition: background-color $primaryTransition;
+
+      &:hover {
+
+      }
+
+      &:hover, &_active {
+         cursor: pointer;
+
+         background-color: rgba(0, 0, 0, 0.1);
+      }
+
+      &_center {
+         display: flex;
+         align-items: center;
+         justify-content: center;
+      }
+   }
+
+
+   &__loader {
+      font-size: rem(16, 24);
+   }
+
+   &_enter {
+      transition: opacity $primaryTransition;
+   }
+
+
+   &_enterFrom {
+      opacity: 0;
+   }
+
+
+   &_enterTo {
+      opacity: 1;
+   }
+
+
+   &_leave {
+      transition: opacity $primaryTransition;
+   }
+
+
+   &_leaveFrom {
+      opacity: 1;
+   }
+
+
+   &_leaveTo {
+      opacity: 0;
+   }
+}

@@ -1,0 +1,74 @@
+.Button {
+
+}
+
+.primaryButtonModifier {
+   $p: &;
+   display: inline-flex;
+   align-items: center;
+
+   padding: em(10, 22) em(15, 22);
+
+   transition: background-color $primaryTransition, opacity $primaryTransition;
+
+   color: $whiteColor;
+   
+   border-radius: em(9, 22);
+   background-color: $blueColor;
+
+   font-weight: 600;
+
+
+
+
+   &:hover {
+      background-color: $blueColorHover;
+   }
+
+   &_invetion {
+      background-color: $purpleColor;
+      
+      &:hover {
+         background-color: $purpleColorHover;
+      }
+   }
+
+   &_red {
+      background-color: rgb(225, 61, 49);
+      
+      &:hover {
+         background-color: red;
+      }
+   }
+
+   &_gray {
+      background-color: rgb(191, 191, 191);
+      
+      &:hover {
+         background-color: rgb(202, 202, 202);
+      }
+   }
+
+   &_disabled {
+      cursor: crosshair;
+      pointer-events: none;
+      
+      opacity: 0.5;
+   }
+
+   @include adaptiveValue("font-size", 22, 15, 0, $widthTo: $tablet);
+}
+
+.secondaryButtonModifier {
+   &_clear {
+      display: inline;
+
+      transition: color $primaryTransition;
+      text-decoration: underline !important;
+      text-decoration-color: $blueColor;
+
+      &:hover {
+         color: $blueColorHover;
+      }
+   }
+}

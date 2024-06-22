@@ -1,0 +1,29 @@
+.Option {
+    position: relative;
+
+    display: flex;
+    align-items: center;
+
+    box-sizing: content-box;
+    padding: em(15);
+
+    cursor: pointer;
+
+    transition: background-color $primaryTransition;
+
+    transition: font-size $primaryTransition;
+
+    text-wrap: nowrap;
+
+    color: $blueColor;
+
+    font-weight: 300;
+
+    &:hover, &_active {
+      background-color: rgba(0, 0, 0, 0.1);
+    }
+
+    &__bold {
+      font-weight: 400;
+    }
+}
