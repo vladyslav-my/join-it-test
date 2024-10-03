@@ -3,12 +3,16 @@ import { createSliceWithThunk } from "@/shared/lib/createSliceWithThunk";
 import { EntityCalendarEventSchema, Event } from "../types/EntityCalendarEventSchema";
 
 const initialState: EntityCalendarEventSchema = {
-	data: [],
+	data: JSON.parse(localStorage.getItem("calendarData") || "[]"),
 	selectedData: undefined,
 	tooltipPosition: undefined,
 	isTooltipVisible: false,
 	isEditing: false,
 	tableRootElement: undefined,
+};
+
+const saveToLocalStorage = (data: EntityCalendarEventSchema) => {
+	localStorage.setItem("calendarData", JSON.stringify(data.data));
 };
 
 export const entityCalendarEventSlice = createSliceWithThunk({
@@ -17,19 +21,25 @@ export const entityCalendarEventSlice = createSliceWithThunk({
 	reducers: (create) => ({
 		setData: create.reducer((state, action: PayloadAction<any>) => {
 			state.data = action.payload;
+			saveToLocalStorage(state);
 		}),
 
 		addData: create.reducer((state, action: PayloadAction<Event>) => {
 			state.data.push(action.payload);
+			saveToLocalStorage(state);
 		}),
+
 		updateData: create.reducer((state, action: PayloadAction<Event>) => {
 			const index = state.data.findIndex((event) => event.id === action.payload.id);
 			if (index !== -1) {
 				state.data[index] = action.payload;
+				saveToLocalStorage(state);
 			}
 		}),
+
 		removeData: create.reducer((state, action: PayloadAction<string>) => {
 			state.data = state.data.filter((event) => event.id !== action.payload);
+			saveToLocalStorage(state);
 		}),
 
 		setSelectedData: create.reducer((state, action: PayloadAction<Event>) => {
