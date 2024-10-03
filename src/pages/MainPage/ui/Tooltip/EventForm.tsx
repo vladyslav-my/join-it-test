@@ -1,13 +1,10 @@
-import { start } from "repl";
-import {
-	ActionIcon, Button, ColorInput, TextInput,
-} from "@mantine/core";
+import { Button, ColorInput, TextInput } from "@mantine/core";
 import { TimeInput, DatePickerInput, DateValue } from "@mantine/dates";
-import { IconClock } from "@tabler/icons-react";
 import clsx from "clsx";
 import {
-	FC, MouseEventHandler, useCallback, useEffect, useRef, useState,
+	FC, useEffect, useRef, useCallback,
 } from "react";
+import { useForm, Controller } from "react-hook-form";
 import { useSelector } from "react-redux";
 import { entityCalendarEventActions, entityCalendarEventSelectors } from "@/entities/CalendarEvent";
 import { useAppDispatch } from "@/shared/lib/hooks/useAppDispatch/useAppDispatch";
@@ -20,195 +17,212 @@ const formatTime = (date: Date): string => {
 };
 
 interface EventFormProps {
-	className?: string
+	className?: string;
+}
+
+interface FormData {
+	title: string;
+	date: DateValue | null;
+	timeStart: string;
+	timeEnd: string;
+	notes: string;
+	color: string;
 }
 
 export const EventForm: FC<EventFormProps> = ({ className }) => {
-	const ref = useRef<HTMLInputElement>(null);
-
 	const dispatch = useAppDispatch();
 	const selectedEventData = useSelector(entityCalendarEventSelectors.getSelectedData);
 	const isEditing = useSelector(entityCalendarEventSelectors.getIsEditing);
+	const ref = useRef<HTMLInputElement>(null);
 
-	const [title, setTitle] = useState("");
-	const [timeStart, setTimeStart] = useState("");
-	const [timeEnd, setTimeEnd] = useState("");
-	const [date, setDate] = useState<DateValue>(null);
-	const [notes, setNotes] = useState("");
-	const [color, setColor] = useState("");
+	const {
+		handleSubmit, control, reset, formState: { errors },
+	} = useForm<FormData>({
+		defaultValues: {
+			title: "",
+			date: null,
+			timeStart: "",
+			timeEnd: "",
+			notes: "",
+			color: "#039DFF",
+		},
+		mode: "onBlur",
+	});
 
-	const onClickSave = useCallback((event: any) => {
-		if (date) {
-			const startDate = new Date(date);
-			startDate.setHours(Number(timeStart.split(":")[0]), Number(timeStart.split(":")[1]));
+	useEffect(() => {
+		if (selectedEventData) {
+			reset({
+				title: selectedEventData?.title || "",
+				date: selectedEventData?.start || null,
+				timeStart: formatTime(new Date(selectedEventData?.start)) || "",
+				timeEnd: formatTime(new Date(selectedEventData?.end)) || "",
+				notes: selectedEventData.extendedProps?.notes || "",
+				color: selectedEventData?.extendedProps?.color || "#039DFF",
+			});
+		}
+	}, [selectedEventData, reset]);
 
-			const endDate = new Date(date);
-			endDate.setHours(Number(timeEnd.split(":")[0]), Number(timeEnd.split(":")[1]));
+	const onSubmit = useCallback((data: FormData) => {
+		if (data.date) {
+			const startDate = new Date(data.date);
+			startDate.setHours(Number(data.timeStart.split(":")[0]), Number(data.timeStart.split(":")[1]));
+
+			const endDate = new Date(data.date);
+			endDate.setHours(Number(data.timeEnd.split(":")[0]), Number(data.timeEnd.split(":")[1]));
 
 			const newEvent = {
-				id: Math.random().toString(),
-				title,
+				id: selectedEventData?.id || Math.random().toString(),
+				title: data.title,
 				start: startDate,
 				end: endDate,
-				allDay: !(timeStart && timeEnd),
-				backgroundColor: color,
-				borderColor: color,
-				textColor: color,
+				allDay: !(data.timeStart && data.timeEnd),
+				backgroundColor: data.color,
+				borderColor: data.color,
+				textColor: data.color,
 				extendedProps: {
-					notes,
-					timeStart,
-					timeEnd,
-					color,
+					notes: data.notes,
+					timeStart: data.timeStart,
+					timeEnd: data.timeEnd,
+					color: data.color,
 				},
 			};
 
-			// @ts-ignore
-			dispatch(entityCalendarEventActions.addData(newEvent));
+			if (isEditing) {
+				dispatch(entityCalendarEventActions.updateData({
+					id: selectedEventData.id,
+					data: newEvent,
+				}));
+			} else {
+				dispatch(entityCalendarEventActions.addData(newEvent));
+			}
+
 			dispatch(entityCalendarEventActions.setIsTooltipVisible(false));
 		}
-	}, [color, date, dispatch, notes, timeEnd, timeStart, title]);
+	}, [dispatch, isEditing, selectedEventData]);
 
-	const onClickEdit = useCallback(() => {
-		if (date) {
-			const startDate = new Date(date);
-			startDate.setHours(Number(timeStart.split(":")[0]), Number(timeStart.split(":")[1]));
-
-			const endDate = new Date(date);
-			endDate.setHours(Number(timeEnd.split(":")[0]), Number(timeEnd.split(":")[1]));
-
-			const editableEvent = {
-				id: Math.random().toString(),
-				title,
-				start: startDate,
-				end: endDate,
-				allDay: !(timeStart && timeEnd),
-				backgroundColor: color,
-				borderColor: color,
-				textColor: color,
-				extendedProps: {
-					notes,
-					timeStart,
-					timeEnd,
-					color,
-				},
-			};
-
-			dispatch(entityCalendarEventActions.updateData({
-				id: selectedEventData.id,
-				data: editableEvent,
-			}));
-			dispatch(entityCalendarEventActions.setIsTooltipVisible(false));
-		}
-	}, [color, date, dispatch, notes, selectedEventData.id, timeEnd, timeStart, title]);
-
-	const onClickDisacard = useCallback(() => {
+	const onClickDiscard = useCallback(() => {
 		dispatch(entityCalendarEventActions.removeData(selectedEventData.id));
 		dispatch(entityCalendarEventActions.setIsTooltipVisible(false));
-	}, [dispatch]);
+	}, [dispatch, selectedEventData]);
 
 	const onClickCancel = useCallback(() => {
 		dispatch(entityCalendarEventActions.setIsTooltipVisible(false));
 	}, [dispatch]);
 
-	useEffect(() => {
-		console.log(selectedEventData);
-		setTitle(selectedEventData?.title || "");
-		setNotes(selectedEventData?.notes || "");
-		setColor(selectedEventData?.extendedProps?.color || "#039DFF");
-		setTimeStart(formatTime(new Date(selectedEventData?.start)) || "");
-		setTimeEnd(formatTime(new Date(selectedEventData?.end)) || "");
-		setNotes(selectedEventData.extendedProps?.notes || "");
-		setDate(selectedEventData?.start || new Date().getDate());
-	}, [selectedEventData]);
-
-	const onChangeStartTime = useCallback((e: any) => {
-		setTimeStart(e.target.value);
-		console.log(e.target.value);
-	}, []);
-
-	const onChangeEndTime = useCallback((e: any) => {
-		setTimeEnd(e.target.value);
-		console.log(e.target.value);
-	}, []);
-
-	const onChangeDate = useCallback((value: DateValue) => {
-		setDate(value);
-		console.log(value);
-	}, []);
-
-	const onChangeTitle = useCallback((e: any) => {
-		setTitle(e.target.value);
-		console.log(e.target.value);
-	}, []);
-
-	const onChangeNotes = useCallback((e: any) => {
-		setNotes(e.target.value);
-		console.log(e.target.value);
-	}, []);
-
-	const onChangeColor = useCallback((value: string) => {
-		setColor(value);
-		console.log(value);
-	}, []);
-
 	return (
 		<div className={clsx(cls.EventForm, {}, [className])}>
-			{isEditing
-				? (
+			<form onSubmit={handleSubmit(onSubmit)}>
+				{isEditing ? (
 					<>
-						<Button onClick={onClickEdit}>Edit</Button>
-						<Button color="red" variant="outline" onClick={onClickDisacard}>Disacard</Button>
+						<Button type="submit">Edit</Button>
+						<Button color="red" variant="outline" onClick={onClickDiscard}>Discard</Button>
 					</>
-				)
-				: (
+				) : (
 					<>
 						<Button onClick={onClickCancel}>Cancel</Button>
-						<Button onClick={onClickSave}>Save</Button>
+						<Button type="submit">Save</Button>
 					</>
 				)}
 
-			<TextInput
-				label="Event title"
-				placeholder="Event title"
-				value={title}
-				onChange={onChangeTitle}
-			/>
-			<DatePickerInput
-				label="Pick date"
-				placeholder="Pick date"
-				value={date}
-				onChange={onChangeDate}
-			/>
-			<TimeInput
-				label="Start time"
-				ref={ref}
-				onChange={onChangeStartTime}
-				value={timeStart}
-			/>
-			<TimeInput
-				label="End time"
-				ref={ref}
-				onChange={onChangeEndTime}
-				value={timeEnd}
-			/>
-			<TextInput
-				label="Notes"
-				placeholder="Notes"
-				value={notes}
-				onChange={onChangeNotes}
-			/>
-			<ColorInput
-				label="Color"
-				placeholder="Color"
-				value={color}
-				onChange={onChangeColor}
-			/>
+				<Controller
+					name="title"
+					control={control}
+					rules={{
+						required: "Event title is required",
+						maxLength: { value: 32, message: "Maximum 32 characters allowed" },
+					}}
+					render={({ field }) => (
+						<TextInput
+							label="Event title"
+							placeholder="Event title"
+							error={errors.title?.message}
+							{...field}
+						/>
+					)}
+				/>
+
+				<Controller
+					name="date"
+					control={control}
+					rules={{ required: "Date is required" }}
+					render={({ field }) => (
+						<DatePickerInput
+							label="Pick date"
+							placeholder="Pick date"
+							error={errors.date?.message}
+							{...field}
+						/>
+					)}
+				/>
+
+				<Controller
+					name="timeStart"
+					control={control}
+					rules={{
+						required: "Start time is required",
+						pattern: {
+							value: /^([01]\d|2[0-3]):([0-5]\d)$/,
+							message: "Invalid time format",
+						},
+					}}
+					render={({ field }) => (
+						<TimeInput
+							label="Start time"
+							ref={ref}
+							error={errors.timeStart?.message}
+							{...field}
+						/>
+					)}
+				/>
+
+				<Controller
+					name="timeEnd"
+					control={control}
+					rules={{
+						required: "End time is required",
+						pattern: {
+							value: /^([01]\d|2[0-3]):([0-5]\d)$/,
+							message: "Invalid time format",
+						},
+					}}
+					render={({ field }) => (
+						<TimeInput
+							label="End time"
+							ref={ref}
+							error={errors.timeEnd?.message}
+							{...field}
+						/>
+					)}
+				/>
+
+				<Controller
+					name="notes"
+					control={control}
+					rules={{
+						maxLength: { value: 32, message: "Maximum 32 characters allowed" },
+					}}
+					render={({ field }) => (
+						<TextInput
+							label="Notes"
+							placeholder="Notes"
+							error={errors.notes?.message}
+							{...field}
+						/>
+					)}
+				/>
+
+				<Controller
+					name="color"
+					control={control}
+					render={({ field }) => (
+						<ColorInput
+							label="Color"
+							placeholder="Color"
+							{...field}
+						/>
+					)}
+				/>
+			</form>
 		</div>
 	);
 };
-
-// const pickerControl = (
-// 	<ActionIcon variant="subtle" color="gray" onClick={() => ref.current?.showPicker()}>
-// 		<IconClock style={{ width: 16, height: 16 }} stroke={1.5} />
-// 	</ActionIcon>
-// );
