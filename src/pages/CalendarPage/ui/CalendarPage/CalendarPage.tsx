@@ -33,6 +33,7 @@ export const CalendarPage: FC = memo(() => {
 
 	const handleDateSelect = useCallback((info: DateSelectArg): void => {
 		const updatedEvent = createCleanEventDto(info);
+		console.log(info);
 		dispatch(entityCalendarEventActions.setSelectedData(updatedEvent));
 		dispatch(entityCalendarEventActions.setIsEditing(false));
 
@@ -48,6 +49,7 @@ export const CalendarPage: FC = memo(() => {
 
 	const eventChangeHandler = useCallback((info: EventChangeArg): void => {
 		const updatedEvent = createCleanEventDto(info.event);
+		console.log(info.event);
 		dispatch(entityCalendarEventActions.updateData(updatedEvent));
 	}, [dispatch]);
 

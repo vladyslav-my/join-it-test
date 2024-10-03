@@ -39,7 +39,7 @@ export const EventForm: FC<EventFormProps> = ({ className }) => {
 	const calendarInputRef = useRef(null);
 
 	const {
-		handleSubmit, control, reset, formState: { errors },
+		handleSubmit, control, reset, formState: { errors }, getValues,
 	} = useForm<FormData>({
 		defaultValues: {
 			title: "",
@@ -185,6 +185,12 @@ export const EventForm: FC<EventFormProps> = ({ className }) => {
 					pattern: {
 						value: /^([01]\d|2[0-3]):([0-5]\d)$/,
 						message: "Invalid time format",
+					},
+					validate: (value) => {
+						if (value === getValues("timeStart")) {
+							return "Start time and end time cannot be the same";
+						}
+						return true;
 					},
 				}}
 				render={({ field }) => (

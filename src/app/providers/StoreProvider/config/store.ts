@@ -23,6 +23,7 @@ export const createReduxStore = () => {
 		devTools: __IS_DEV__,
 		middleware: (getDefaultMiddleware) => getDefaultMiddleware({
 			thunk: { extraArgument },
+			serializableCheck: false,
 		}).concat(rtkApi.middleware),
 	});
 
