@@ -148,8 +148,8 @@ export const EventForm: FC<EventFormProps> = ({ className }) => {
 				rules={{ required: "Date is required" }}
 				render={({ field }) => (
 					<DatePickerInput
-						label="Pick date"
-						placeholder="Pick date"
+						label="Date"
+						placeholder="Date"
 						error={errors.date?.message}
 						{...field}
 						ref={calendarInputRef}
@@ -224,11 +224,13 @@ export const EventForm: FC<EventFormProps> = ({ className }) => {
 					<ColorInput
 						label="Color"
 						placeholder="Color"
+						withEyeDropper={false}
 						error={errors.color?.message}
 						{...field}
 						ref={colorInputRef}
 					/>
 				)}
+
 			/>
 		</form>
 	);

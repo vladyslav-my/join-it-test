@@ -1,4 +1,5 @@
 import { Portal } from "@mantine/core";
+import { useTransition, animated } from "@react-spring/web";
 import clsx from "clsx";
 import { FC, useEffect } from "react";
 import { useSelector } from "react-redux";
@@ -19,13 +20,30 @@ export const Tooltip: FC<TooltipProps> = ({
 	const isTooltipVisible = useSelector(entityCalendarEventSelectors.getIsTooltipVisible);
 	const tableRootElementData = useSelector(entityCalendarEventSelectors.getTableRootElement);
 
+	const transition = useTransition(isTooltipVisible, {
+		from: {
+			opacity: 0,
+		},
+		enter: {
+			opacity: 1,
+		},
+		leave: {
+			opacity: 0,
+		},
+		config: {
+			duration: 300,
+			easing: (t) => t * t * (3 - 2 * t),
+		},
+	});
+
 	useEffect(() => {
 		const handleClickOutside = (event: MouseEvent) => {
 			if (
 				isTooltipVisible
 				&& tableRootElementData
 				&& !tableRootElementData.contains(event.target as Node)
-				&& !document.contains(document.querySelector("[data-portal]"))
+				&& !document.contains(document.querySelector(".mantine-Popover-dropdown"))
+				&& !document.contains(document.querySelector(".mantine-ColorInput-slider"))
 			) {
 				dispatch(entityCalendarEventActions.setIsTooltipVisible(false));
 			}
@@ -37,23 +55,19 @@ export const Tooltip: FC<TooltipProps> = ({
 		};
 	}, [dispatch, isTooltipVisible, tableRootElementData]);
 
-	if (!isTooltipVisible) {
-		return null;
-	}
-
-	return (
+	return transition((styles, isOpen) => isOpen && (
 		<Portal target={tableRootElementData as HTMLElement}>
-			<div
+			<animated.div
 				className={clsx(cls.Tooltip, {}, [className])}
 				style={{
 					position: "absolute",
 					top: tooltipPosition?.top,
 					left: tooltipPosition?.left,
+					...styles,
 				}}
 			>
 				<EventForm />
-			</div>
+			</animated.div>
 		</Portal>
-
-	);
+	));
 };
