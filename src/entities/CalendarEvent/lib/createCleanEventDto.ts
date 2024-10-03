@@ -13,14 +13,13 @@ export function createCleanEventDto(
 		title: eventWithDefaults.title || "",
 		start: eventWithDefaults.start || new Date(),
 		end: eventWithDefaults.end || new Date(),
-		allDay: eventWithDefaults.allDay ?? true,
-		borderColor: eventWithDefaults.borderColor || "#FFFFFF",
-		textColor: eventWithDefaults.textColor || "#000000",
+		allDay: !(eventWithDefaults.extendedProps?.timeStart && eventWithDefaults.extendedProps?.timeStart),
+		borderColor: eventWithDefaults.extendedProps?.color,
 		extendedProps: {
 			notes: eventWithDefaults.extendedProps?.notes || "",
 			timeStart: eventWithDefaults.extendedProps?.timeStart || "",
 			timeEnd: eventWithDefaults.extendedProps?.timeEnd || "",
-			color: eventWithDefaults.extendedProps?.color || "#FFFFFF",
+			color: eventWithDefaults.extendedProps?.color,
 		},
 	};
 }

@@ -9,13 +9,8 @@ import { useForm, Controller } from "react-hook-form";
 import { useSelector } from "react-redux";
 import { entityCalendarEventActions, entityCalendarEventSelectors } from "@/entities/CalendarEvent";
 import { useAppDispatch } from "@/shared/lib/hooks/useAppDispatch/useAppDispatch";
+import { createDateWithTime, formatTime } from "../../lib";
 import cls from "./style.module.scss";
-
-const formatTime = (date: Date): string => {
-	const hours = String(date.getHours()).padStart(2, "0");
-	const minutes = String(date.getMinutes()).padStart(2, "0");
-	return `${hours}:${minutes}`;
-};
 
 interface EventFormProps {
 	className?: string;
@@ -57,8 +52,8 @@ export const EventForm: FC<EventFormProps> = ({ className }) => {
 			reset({
 				title: selectedEventData?.title || "",
 				date: selectedEventData?.start || null,
-				timeStart: formatTime(new Date(selectedEventData?.start)) || "",
-				timeEnd: formatTime(new Date(selectedEventData?.end)) || "",
+				timeStart: formatTime(selectedEventData?.start) || "",
+				timeEnd: formatTime(selectedEventData?.end) || "",
 				notes: selectedEventData.extendedProps?.notes || "",
 				color: selectedEventData?.extendedProps?.color || "#039DFF",
 			});
@@ -67,11 +62,8 @@ export const EventForm: FC<EventFormProps> = ({ className }) => {
 
 	const onSubmit = useCallback((data: FormData) => {
 		if (data.date) {
-			const startDate = new Date(data.date);
-			startDate.setHours(Number(data.timeStart.split(":")[0]), Number(data.timeStart.split(":")[1]));
-
-			const endDate = new Date(data.date);
-			endDate.setHours(Number(data.timeEnd.split(":")[0]), Number(data.timeEnd.split(":")[1]));
+			const startDate = createDateWithTime(data.date, data.timeStart)!;
+			const endDate = createDateWithTime(data.date, data.timeEnd)!;
 
 			const newEvent = {
 				id: selectedEventData?.id || Math.random().toString(),

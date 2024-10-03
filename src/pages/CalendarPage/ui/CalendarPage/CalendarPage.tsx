@@ -30,20 +30,24 @@ export const CalendarPage: FC = memo(() => {
 	const eventsData = useSelector(entityCalendarEventSelectors.getData);
 	const tableRootElementData = useSelector(entityCalendarEventSelectors.getTableRootElement);
 
-	const handleDateSelect = useCallback((info: DateSelectArg): void => {
-		const updatedEvent = createCleanEventDto(info);
-		dispatch(entityCalendarEventActions.setSelectedData(updatedEvent));
-		dispatch(entityCalendarEventActions.setIsEditing(false));
-
-		if (tableRootElementData && info.jsEvent) {
+	const showTooltip = useCallback((jsEvent: DateSelectArg["jsEvent"]) => {
+		if (tableRootElementData && jsEvent) {
 			const calendarRect = tableRootElementData.getBoundingClientRect();
-			const tooltipLeft = info.jsEvent.pageX - calendarRect.left;
-			const tooltipTop = info.jsEvent.pageY - calendarRect.top;
+			const tooltipLeft = jsEvent.pageX - calendarRect.left;
+			const tooltipTop = jsEvent.pageY - calendarRect.top;
 
 			dispatch(entityCalendarEventActions.setTooltipPosition({ top: tooltipTop, left: tooltipLeft }));
 			dispatch(entityCalendarEventActions.setIsTooltipVisible(true));
 		}
 	}, [dispatch, tableRootElementData]);
+
+	const handleDateSelect = useCallback((info: DateSelectArg): void => {
+		const updatedEvent = createCleanEventDto(info);
+		dispatch(entityCalendarEventActions.setSelectedData(updatedEvent));
+		dispatch(entityCalendarEventActions.setIsEditing(false));
+
+		showTooltip(info.jsEvent);
+	}, [dispatch, showTooltip]);
 
 	const eventChangeHandler = useCallback((info: EventChangeArg): void => {
 		const updatedEvent = createCleanEventDto(info.event);
@@ -54,24 +58,13 @@ export const CalendarPage: FC = memo(() => {
 		dispatch(entityCalendarEventActions.removeData(removeInfo.event.id));
 	}, [dispatch]);
 
-	// const eventsSetHandler = useCallback((events: EventApi[]): void => {
-	// 	console.log(events);
-	// }, []);
-
 	const eventClickHandler = useCallback((info: EventClickArg): void => {
 		const selectedEvent = createCleanEventDto(info.event);
-		dispatch(entityCalendarEventActions.setSelectedData(selectedEvent));
+		dispatch(entityCalendarEventActions.setSelectedData((selectedEvent)));
 		dispatch(entityCalendarEventActions.setIsEditing(true));
 
-		if (tableRootElementData) {
-			const calendarRect = tableRootElementData.getBoundingClientRect();
-			const tooltipLeft = info.jsEvent.pageX - calendarRect.left;
-			const tooltipTop = info.jsEvent.pageY - calendarRect.top;
-
-			dispatch(entityCalendarEventActions.setTooltipPosition({ top: tooltipTop, left: tooltipLeft }));
-			dispatch(entityCalendarEventActions.setIsTooltipVisible(true));
-		}
-	}, [dispatch, tableRootElementData]);
+		showTooltip(info.jsEvent);
+	}, [dispatch, showTooltip]);
 
 	useEffect(() => {
 		const tableRootElementVar = document.querySelector(tableRootElement);
@@ -102,7 +95,6 @@ export const CalendarPage: FC = memo(() => {
 				eventClick={eventClickHandler}
 				eventChange={eventChangeHandler}
 				eventRemove={eventRemoveHandler}
-				// eventsSet={eventsSetHandler}
 				height="100%"
 			/>
 		</AppLayout>

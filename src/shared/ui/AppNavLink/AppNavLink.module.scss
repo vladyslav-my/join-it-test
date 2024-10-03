@@ -21,6 +21,9 @@
       padding: rem(20);
 
       transition: border-left $primaryTransition, background $primaryTransition;
+
+      border-left: rem(3) solid transparent;
+      background: transparent;
       &_active {
          border-left: rem(3) solid #A3A0FB;
          background: #0000001A;

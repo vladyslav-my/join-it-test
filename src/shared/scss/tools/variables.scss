@@ -7,11 +7,6 @@ $whiteColor: #fff;
 $redColor: #FF0000;
 
 $loaderColor: #e5e5e5;
-$headerZIndex: 900;
-$overlayZindex: 2000;
-$overlayLowerHeaderZindex: 800;
-$asideZindex: 800;
-$modalZindex: 1000;
 
 $primaryTransition: 0.3s ease;
 $secondaryTransition: 0.2s ease;
@@ -22,12 +17,9 @@ $lineHeight: 17;
 $fontSize: 15; //? size
 $fontColor: $primaryTextColor; //? color
 
-$minWidth: 320; //? min width of layout
+$minWidth: 1200; //? min width of layout
 $containerPadding: 30; //? padding for container
 $maxWidthContainer: 1252; //? width container
-$authWidthContainer: 880; //? width container
-$formWidthContainer: 440; //? width container
-
 
 //** Break-points:
 $pc: $containerPadding * 2 + $maxWidthContainer;

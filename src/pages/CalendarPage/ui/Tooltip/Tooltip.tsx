@@ -55,6 +55,19 @@ export const Tooltip: FC<TooltipProps> = ({
 		};
 	}, [dispatch, isTooltipVisible, tableRootElementData]);
 
+	useEffect(() => {
+		const handleClickEscape = (event: KeyboardEvent) => {
+			if (event.key === "Escape") {
+				dispatch(entityCalendarEventActions.setIsTooltipVisible(false));
+			}
+		};
+
+		document.addEventListener("keydown", handleClickEscape);
+		return () => {
+			document.removeEventListener("keydown", handleClickEscape);
+		};
+	}, [dispatch, isTooltipVisible]);
+
 	return transition((styles, isOpen) => isOpen && (
 		<Portal target={tableRootElementData as HTMLElement}>
 			<animated.div
