@@ -3,6 +3,7 @@ import { TimeInput, DatePickerInput, DateValue } from "@mantine/dates";
 import clsx from "clsx";
 import {
 	FC, useEffect, useCallback,
+	useRef,
 } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { useSelector } from "react-redux";
@@ -33,6 +34,9 @@ export const EventForm: FC<EventFormProps> = ({ className }) => {
 	const dispatch = useAppDispatch();
 	const selectedEventData = useSelector(entityCalendarEventSelectors.getSelectedData);
 	const isEditing = useSelector(entityCalendarEventSelectors.getIsEditing);
+
+	const colorInputRef = useRef(null);
+	const calendarInputRef = useRef(null);
 
 	const {
 		handleSubmit, control, reset, formState: { errors },
@@ -105,119 +109,122 @@ export const EventForm: FC<EventFormProps> = ({ className }) => {
 		dispatch(entityCalendarEventActions.setIsTooltipVisible(false));
 	}, [dispatch]);
 
+	useEffect(() => {
+	}, []);
+
 	return (
-		<div className={clsx(cls.EventForm, {}, [className])}>
-			<form onSubmit={handleSubmit(onSubmit)}>
+		<form className={clsx(cls.EventForm, {}, [className])} onSubmit={handleSubmit(onSubmit)}>
+			<div className={cls.EventForm__buttons}>
 				{isEditing ? (
 					<>
 						<Button type="submit">Edit</Button>
-						<Button color="red" variant="outline" onClick={onClickDiscard}>Discard</Button>
+						<Button color="red" variant="filled" onClick={onClickDiscard}>Discard</Button>
 					</>
 				) : (
-					<>
-						<Button onClick={onClickCancel}>Cancel</Button>
-						<Button type="submit">Save</Button>
-					</>
+					<Button type="submit">Save</Button>
 				)}
+				<Button color="red" variant="outline" onClick={onClickCancel}>Cancel</Button>
+			</div>
 
-				<Controller
-					name="title"
-					control={control}
-					rules={{
-						required: "Event title is required",
-						maxLength: { value: 32, message: "Maximum 32 characters allowed" },
-					}}
-					render={({ field }) => (
-						<TextInput
-							label="Event title"
-							placeholder="Event title"
-							error={errors.title?.message}
-							{...field}
-						/>
-					)}
-				/>
+			<Controller
+				name="title"
+				control={control}
+				rules={{
+					required: "Event title is required",
+					maxLength: { value: 32, message: "Maximum 32 characters allowed" },
+				}}
+				render={({ field }) => (
+					<TextInput
+						label="Event title"
+						placeholder="Event title"
+						error={errors.title?.message}
+						{...field}
+					/>
+				)}
+			/>
 
-				<Controller
-					name="date"
-					control={control}
-					rules={{ required: "Date is required" }}
-					render={({ field }) => (
-						<DatePickerInput
-							label="Pick date"
-							placeholder="Pick date"
-							error={errors.date?.message}
-							{...field}
-						/>
-					)}
-				/>
+			<Controller
+				name="date"
+				control={control}
+				rules={{ required: "Date is required" }}
+				render={({ field }) => (
+					<DatePickerInput
+						label="Pick date"
+						placeholder="Pick date"
+						error={errors.date?.message}
+						{...field}
+						ref={calendarInputRef}
+					/>
+				)}
+			/>
 
-				<Controller
-					name="timeStart"
-					control={control}
-					rules={{
-						required: "Start time is required",
-						pattern: {
-							value: /^([01]\d|2[0-3]):([0-5]\d)$/,
-							message: "Invalid time format",
-						},
-					}}
-					render={({ field }) => (
-						<TimeInput
-							label="Start time"
-							error={errors.timeStart?.message}
-							{...field}
-						/>
-					)}
-				/>
+			<Controller
+				name="timeStart"
+				control={control}
+				rules={{
+					required: "Start time is required",
+					pattern: {
+						value: /^([01]\d|2[0-3]):([0-5]\d)$/,
+						message: "Invalid time format",
+					},
+				}}
+				render={({ field }) => (
+					<TimeInput
+						label="Start time"
+						error={errors.timeStart?.message}
+						{...field}
+					/>
+				)}
+			/>
 
-				<Controller
-					name="timeEnd"
-					control={control}
-					rules={{
-						required: "End time is required",
-						pattern: {
-							value: /^([01]\d|2[0-3]):([0-5]\d)$/,
-							message: "Invalid time format",
-						},
-					}}
-					render={({ field }) => (
-						<TimeInput
-							label="End time"
-							error={errors.timeEnd?.message}
-							{...field}
-						/>
-					)}
-				/>
+			<Controller
+				name="timeEnd"
+				control={control}
+				rules={{
+					required: "End time is required",
+					pattern: {
+						value: /^([01]\d|2[0-3]):([0-5]\d)$/,
+						message: "Invalid time format",
+					},
+				}}
+				render={({ field }) => (
+					<TimeInput
+						label="End time"
+						error={errors.timeEnd?.message}
+						{...field}
+					/>
+				)}
+			/>
 
-				<Controller
-					name="notes"
-					control={control}
-					rules={{
-						maxLength: { value: 32, message: "Maximum 32 characters allowed" },
-					}}
-					render={({ field }) => (
-						<TextInput
-							label="Notes"
-							placeholder="Notes"
-							error={errors.notes?.message}
-							{...field}
-						/>
-					)}
-				/>
+			<Controller
+				name="notes"
+				control={control}
+				rules={{
+					maxLength: { value: 32, message: "Maximum 32 characters allowed" },
+				}}
+				render={({ field }) => (
+					<TextInput
+						label="Notes"
+						placeholder="Notes"
+						error={errors.notes?.message}
+						{...field}
+					/>
+				)}
+			/>
 
-				<Controller
-					name="color"
-					control={control}
-					render={({ field }) => (
-						<ColorInput
-							label="Color"
-							placeholder="Color"
-							error={errors.color?.message}
-							{...field}
-						/>
-					)}
-				/>
-			</form>
-		</div>
+			<Controller
+				name="color"
+				control={control}
+				render={({ field }) => (
+					<ColorInput
+						label="Color"
+						placeholder="Color"
+						error={errors.color?.message}
+						{...field}
+						ref={colorInputRef}
+					/>
+				)}
+			/>
+		</form>
 	);
 };

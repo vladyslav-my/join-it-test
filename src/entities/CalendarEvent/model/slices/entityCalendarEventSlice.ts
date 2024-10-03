@@ -1,8 +1,4 @@
-import { get } from "http";
-import { DateSelectArg, EventClickArg } from "@fullcalendar/core/index.js";
-import { EventImpl } from "@fullcalendar/core/internal";
 import { PayloadAction } from "@reduxjs/toolkit";
-import { set } from "react-hook-form";
 import { createSliceWithThunk } from "@/shared/lib/createSliceWithThunk";
 import { EntityCalendarEventSchema, Event } from "../types/EntityCalendarEventSchema";
 

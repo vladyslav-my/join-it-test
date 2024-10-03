@@ -1,6 +1,8 @@
+import { IconCalendarPin } from "@tabler/icons-react";
 import clsx from "clsx";
 import { FC } from "react";
-import { Logo } from "@/shared/ui/Logo";
+import { getMainRoutePath } from "@/shared/routes/path";
+import { AppNavLink } from "@/shared/ui/AppNavLink/AppNavLink";
 import cls from "./Aside.module.scss";
 
 interface AsideProps {
@@ -10,7 +12,7 @@ interface AsideProps {
 export const Aside: FC<AsideProps> = ({ className }) => {
 	return (
 		<aside className={clsx(cls.Aside, className)}>
-			Aside
+			<AppNavLink to={getMainRoutePath()} Icon={IconCalendarPin}>Calendar</AppNavLink>
 		</aside>
 	);
 };

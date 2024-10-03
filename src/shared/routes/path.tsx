@@ -1,2 +1,1 @@
-export const getMainRoutePath = () => "/app";
-export const getLoginRoutePath = () => "/login";
+export const getMainRoutePath = () => "/";

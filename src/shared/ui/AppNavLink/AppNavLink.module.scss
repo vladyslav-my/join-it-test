@@ -1,0 +1,29 @@
+.AppNavLink {
+   width: 100%;
+
+   color: $whiteColor;
+
+   &__link {
+      width: 100%;
+   }
+
+   &__text {
+      font-size: rem(20);
+   }
+
+   &__wrapper {
+      display: flex;
+      align-items: center;
+
+      gap: rem(10);
+
+      width: 100%;
+      padding: rem(20);
+
+      transition: border-left $primaryTransition, background $primaryTransition;
+      &_active {
+         border-left: rem(3) solid #A3A0FB;
+         background: #0000001A;
+      }
+   }
+}

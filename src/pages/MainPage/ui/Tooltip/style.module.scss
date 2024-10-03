@@ -1,12 +1,21 @@
 .Tooltip {
    z-index: 100;
 
-   width: rem(250);
    padding: rem(12);
 
-   transform: translateX(-50%);
+   transform: translateX(-50%) translateY(-20%);
 
    color: #fff;
    border-radius: rem(8);
    background: #333;
+}
+
+
+.EventForm {
+   &__buttons {
+      display: flex;
+      gap: rem(20);
+
+      justify-content: space-between;
+   }
 }

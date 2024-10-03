@@ -25,6 +25,7 @@ export const Tooltip: FC<TooltipProps> = ({
 				isTooltipVisible
 				&& tableRootElementData
 				&& !tableRootElementData.contains(event.target as Node)
+				&& !document.contains(document.querySelector("[data-portal]"))
 			) {
 				dispatch(entityCalendarEventActions.setIsTooltipVisible(false));
 			}

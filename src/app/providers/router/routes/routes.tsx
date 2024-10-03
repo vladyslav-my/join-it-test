@@ -2,7 +2,7 @@ import { RouteProps } from "react-router-dom";
 import { MainPage } from "@/pages/MainPage";
 import {
 	getMainRoutePath,
-} from "@/shared/config/routes/path";
+} from "@/shared/routes/path";
 
 export type AppRouteProps = RouteProps & {
 };
