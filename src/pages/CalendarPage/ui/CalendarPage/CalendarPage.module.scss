@@ -93,4 +93,8 @@
    .fc-v-event {
       border: rem(3) solid var(--fc-event-border-color);
    }
+
+   .fc .fc-popover {
+      z-index: 99;
+   }
 }
