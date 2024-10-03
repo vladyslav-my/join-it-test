@@ -2,7 +2,7 @@ import { Button, ColorInput, TextInput } from "@mantine/core";
 import { TimeInput, DatePickerInput, DateValue } from "@mantine/dates";
 import clsx from "clsx";
 import {
-	FC, useEffect, useRef, useCallback,
+	FC, useEffect, useCallback,
 } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { useSelector } from "react-redux";
@@ -33,7 +33,6 @@ export const EventForm: FC<EventFormProps> = ({ className }) => {
 	const dispatch = useAppDispatch();
 	const selectedEventData = useSelector(entityCalendarEventSelectors.getSelectedData);
 	const isEditing = useSelector(entityCalendarEventSelectors.getIsEditing);
-	const ref = useRef<HTMLInputElement>(null);
 
 	const {
 		handleSubmit, control, reset, formState: { errors },
@@ -93,6 +92,7 @@ export const EventForm: FC<EventFormProps> = ({ className }) => {
 					data: newEvent,
 				}));
 			} else {
+				// @ts-ignore
 				dispatch(entityCalendarEventActions.addData(newEvent));
 			}
 
@@ -168,7 +168,6 @@ export const EventForm: FC<EventFormProps> = ({ className }) => {
 					render={({ field }) => (
 						<TimeInput
 							label="Start time"
-							ref={ref}
 							error={errors.timeStart?.message}
 							{...field}
 						/>
@@ -188,7 +187,6 @@ export const EventForm: FC<EventFormProps> = ({ className }) => {
 					render={({ field }) => (
 						<TimeInput
 							label="End time"
-							ref={ref}
 							error={errors.timeEnd?.message}
 							{...field}
 						/>
