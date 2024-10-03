@@ -12,8 +12,8 @@ interface AsideProps {
 export const Aside: FC<AsideProps> = ({ className }) => {
 	return (
 		<aside className={clsx(cls.Aside, className)}>
-			<AppNavLink to={getMainRoutePath()} Icon={IconCalendarPin}>Home</AppNavLink>
-			<AppNavLink to={getCalendarRoutePath()} Icon={IconHome}>Calendar</AppNavLink>
+			<AppNavLink to={getMainRoutePath()} Icon={IconHome}>Home</AppNavLink>
+			<AppNavLink to={getCalendarRoutePath()} Icon={IconCalendarPin}>Calendar</AppNavLink>
 		</aside>
 	);
 };
