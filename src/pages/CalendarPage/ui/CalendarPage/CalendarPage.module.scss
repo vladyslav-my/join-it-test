@@ -1,6 +1,11 @@
-.MainPage {
+.CalendarPage {
    display: flex;
    flex-direction: column;
+   gap: rem(14);
+
+   &__title {
+      font-size: rem(28);
+   }
 }
 
 .FullCalendar {

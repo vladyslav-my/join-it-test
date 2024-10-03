@@ -22,9 +22,9 @@ import { createCleanEventDto, entityCalendarEventActions, entityCalendarEventSel
 import { tableRootElement } from "@/shared/const";
 import { useAppDispatch } from "@/shared/lib/hooks/useAppDispatch/useAppDispatch";
 import { Tooltip } from "../Tooltip/Tooltip";
-import cls from "./MainPage.module.scss";
+import cls from "./CalendarPage.module.scss";
 
-export const MainPage: FC = memo(() => {
+export const CalendarPage: FC = memo(() => {
 	const dispatch = useAppDispatch();
 	const calendarRef = useRef<FullCalendar>(null);
 
@@ -82,7 +82,8 @@ export const MainPage: FC = memo(() => {
 	}, [dispatch]);
 
 	return (
-		<AppLayout className={cls.MainPage}>
+		<AppLayout className={cls.CalendarPage}>
+			<h1 className={cls.CalendarPage__title}>Calendar</h1>
 			<Tooltip />
 			<FullCalendar
 				ref={calendarRef}

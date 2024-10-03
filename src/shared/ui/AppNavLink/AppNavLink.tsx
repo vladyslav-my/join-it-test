@@ -6,7 +6,6 @@ import cls from "./AppNavLink.module.scss";
 interface AppNavLinkProps extends ComponentProps<typeof NavLink> {
 	className?: string;
 	Icon: any;
-	name: string;
 	children: string;
 }
 

@@ -15,7 +15,6 @@ export const AppLayout: FC<AppLayoutProps> = ({ className, children }) => {
 			<Header className={cls.AppLayout__header} />
 			<Aside className={cls.AppLayout__aside} />
 			<main className={clsx(cls.AppLayout__main, className)}>
-				<h1 className={cls.AppLayout__title}>Calendar</h1>
 				{children}
 			</main>
 		</div>
