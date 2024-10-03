@@ -72,7 +72,7 @@ module.exports = {
 		"plugin:@conarti/feature-sliced/recommended",
 	],
 	parserOptions: {
-		project: ["./resources/main/tsconfig.json", "./resources/main/tsconfig.node.json"],
+		project: ["./tsconfig.json", "./tsconfig.node.json"],
 	},
 	plugins: ["prettier"],
 	overrides: [

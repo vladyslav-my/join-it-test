@@ -7,5 +7,11 @@
     "jsx": "react-jsx",
     "allowSyntheticDefaultImports": true
   },
-  "include": ["vite.config.ts", ".eslintrc.cjs", ".stylelintrc.cjs"]
+ "include": [
+    "vite.config.ts", 
+    ".eslintrc.cjs", 
+    ".stylelintrc.cjs", 
+    "postcss.config.cjs", 
+    "tailwind.config.cjs"
+  ]
 }

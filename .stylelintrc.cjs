@@ -5,7 +5,8 @@ const otherRules = {
    'max-line-length': null,
    'font-family-no-missing-generic-family-keyword': null,
    "no-descending-specificity": null,
-   "selector-pseudo-class-no-unknown": null
+   "selector-pseudo-class-no-unknown": null,
+   "scss/at-rule-no-unknown": null,
 };
 
 const orderRules = {

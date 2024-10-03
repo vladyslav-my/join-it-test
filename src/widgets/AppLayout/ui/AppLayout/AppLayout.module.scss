@@ -1,0 +1,35 @@
+.AppLayout {
+   display: grid;
+
+   height: 100vh;
+
+   
+
+   grid-template-areas:
+   "header header"
+   "aside main";
+
+   grid-template-rows: auto 1fr;
+   grid-template-columns: rem(260) 1fr;
+
+
+
+   &__header {
+      grid-area: header;
+   }
+   &__aside {
+      grid-area: aside;
+   }
+   &__main {
+      overflow: scroll;
+
+      padding: rem(32) rem(95) rem(32) rem(75);
+
+      background: #F0F0F7;
+      grid-area: main
+   }
+
+   &__title {
+      font-size: rem(28);
+   }
+}

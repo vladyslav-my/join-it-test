@@ -1,1 +1,0 @@
-export { entityGendersModal } from "./model";

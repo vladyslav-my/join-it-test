@@ -1,0 +1,12 @@
+.Tooltip {
+   z-index: 1000;
+
+   width: rem(250);
+   padding: rem(12);
+
+   transform: translateX(-50%);
+
+   color: #fff;
+   border-radius: rem(8);
+   background: #333;
+}

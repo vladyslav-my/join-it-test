@@ -2,7 +2,6 @@ import { Suspense, useMemo } from "react";
 import { Route, Routes } from "react-router-dom";
 import { PageLoader } from "@/shared/ui/PageLoader";
 import { AppRouteProps, routes } from "../../routes/routes";
-import { RequireAuth } from "../RequireAuth";
 
 const AppRouter = () => {
 	const RouteItems = useMemo(() => {
@@ -11,7 +10,7 @@ const AppRouter = () => {
 
 			return (
 				<Route
-					element={<RequireAuth middleware={route.middleware}>{element}</RequireAuth>}
+					element={element}
 					key={route.path}
 					path={route.path}
 				/>
