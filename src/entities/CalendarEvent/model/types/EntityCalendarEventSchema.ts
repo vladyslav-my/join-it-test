@@ -24,7 +24,6 @@ export interface Event {
 	start: Date;
 	end: Date;
 	allDay: boolean;
-	backgroundColor: string;
 	borderColor: string;
 	textColor: string;
 	extendedProps: ExtendedProps;

@@ -14,7 +14,6 @@ export function createCleanEventDto(
 		start: eventWithDefaults.start || new Date(),
 		end: eventWithDefaults.end || new Date(),
 		allDay: eventWithDefaults.allDay ?? true,
-		backgroundColor: eventWithDefaults.backgroundColor || "#FFFFFF",
 		borderColor: eventWithDefaults.borderColor || "#FFFFFF",
 		textColor: eventWithDefaults.textColor || "#000000",
 		extendedProps: {

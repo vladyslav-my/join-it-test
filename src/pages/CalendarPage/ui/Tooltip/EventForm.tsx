@@ -79,7 +79,6 @@ export const EventForm: FC<EventFormProps> = ({ className }) => {
 				start: startDate,
 				end: endDate,
 				allDay: !(data.timeStart && data.timeEnd),
-				backgroundColor: data.color,
 				borderColor: data.color,
 				textColor: data.color,
 				extendedProps: {

@@ -1,6 +1,5 @@
 import {
 	DateSelectArg,
-	EventApi,
 	EventChangeArg,
 	EventClickArg,
 	EventRemoveArg,
@@ -33,7 +32,6 @@ export const CalendarPage: FC = memo(() => {
 
 	const handleDateSelect = useCallback((info: DateSelectArg): void => {
 		const updatedEvent = createCleanEventDto(info);
-		console.log(info);
 		dispatch(entityCalendarEventActions.setSelectedData(updatedEvent));
 		dispatch(entityCalendarEventActions.setIsEditing(false));
 
@@ -49,7 +47,6 @@ export const CalendarPage: FC = memo(() => {
 
 	const eventChangeHandler = useCallback((info: EventChangeArg): void => {
 		const updatedEvent = createCleanEventDto(info.event);
-		console.log(info.event);
 		dispatch(entityCalendarEventActions.updateData(updatedEvent));
 	}, [dispatch]);
 
@@ -57,9 +54,9 @@ export const CalendarPage: FC = memo(() => {
 		dispatch(entityCalendarEventActions.removeData(removeInfo.event.id));
 	}, [dispatch]);
 
-	const eventsSetHandler = useCallback((events: EventApi[]): void => {
-		console.log(events);
-	}, []);
+	// const eventsSetHandler = useCallback((events: EventApi[]): void => {
+	// 	console.log(events);
+	// }, []);
 
 	const eventClickHandler = useCallback((info: EventClickArg): void => {
 		const selectedEvent = createCleanEventDto(info.event);
@@ -105,7 +102,7 @@ export const CalendarPage: FC = memo(() => {
 				eventClick={eventClickHandler}
 				eventChange={eventChangeHandler}
 				eventRemove={eventRemoveHandler}
-				eventsSet={eventsSetHandler}
+				// eventsSet={eventsSetHandler}
 				height="100%"
 			/>
 		</AppLayout>
