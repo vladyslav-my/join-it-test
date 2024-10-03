@@ -72,7 +72,6 @@ export const EventForm: FC<EventFormProps> = ({ className }) => {
 				end: endDate,
 				allDay: !(data.timeStart && data.timeEnd),
 				borderColor: data.color,
-				textColor: data.color,
 				extendedProps: {
 					notes: data.notes,
 					timeStart: data.timeStart,
@@ -180,6 +179,10 @@ export const EventForm: FC<EventFormProps> = ({ className }) => {
 					validate: (value) => {
 						if (value === getValues("timeStart")) {
 							return "Start time and end time cannot be the same";
+						}
+
+						if (value < getValues(("timeStart"))) {
+							return "End time cannot be earlier than start time";
 						}
 						return true;
 					},

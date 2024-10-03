@@ -66,6 +66,10 @@ export const CalendarPage: FC = memo(() => {
 		showTooltip(info.jsEvent);
 	}, [dispatch, showTooltip]);
 
+	const eventDragStartHandler = useCallback((): void => {
+		dispatch(entityCalendarEventActions.setIsTooltipVisible(false));
+	}, [dispatch]);
+
 	useEffect(() => {
 		const tableRootElementVar = document.querySelector(tableRootElement);
 		if (tableRootElementVar) {
@@ -95,6 +99,7 @@ export const CalendarPage: FC = memo(() => {
 				eventClick={eventClickHandler}
 				eventChange={eventChangeHandler}
 				eventRemove={eventRemoveHandler}
+				eventDragStart={eventDragStartHandler}
 				height="100%"
 			/>
 		</AppLayout>
