@@ -1,3 +1,5 @@
+export { createCleanEventDto } from "./lib/createCleanEventDto";
+
 export {
 	entityCalendarEventSlice,
 	entityCalendarEventActions,

@@ -4,7 +4,7 @@ import { EventImpl } from "@fullcalendar/core/internal";
 import { PayloadAction } from "@reduxjs/toolkit";
 import { set } from "react-hook-form";
 import { createSliceWithThunk } from "@/shared/lib/createSliceWithThunk";
-import { EntityCalendarEventSchema } from "../types/EntityCalendarEventSchema";
+import { EntityCalendarEventSchema, Event } from "../types/EntityCalendarEventSchema";
 
 const initialState: EntityCalendarEventSchema = {
 	data: [],
@@ -23,20 +23,20 @@ export const entityCalendarEventSlice = createSliceWithThunk({
 			state.data = action.payload;
 		}),
 
-		addData: create.reducer((state, action: PayloadAction<any>) => {
+		addData: create.reducer((state, action: PayloadAction<Event>) => {
 			state.data.push(action.payload);
 		}),
-		updateData: create.reducer((state, action: PayloadAction<{ id: string; data: any }>) => {
+		updateData: create.reducer((state, action: PayloadAction<Event>) => {
 			const index = state.data.findIndex((event) => event.id === action.payload.id);
 			if (index !== -1) {
-				state.data[index] = { ...state.data[index], ...action.payload.data };
+				state.data[index] = action.payload;
 			}
 		}),
 		removeData: create.reducer((state, action: PayloadAction<string>) => {
 			state.data = state.data.filter((event) => event.id !== action.payload);
 		}),
 
-		setSelectedData: create.reducer((state, action: PayloadAction<DateSelectArg | EventImpl>) => {
+		setSelectedData: create.reducer((state, action: PayloadAction<Event>) => {
 			state.selectedData = action.payload;
 		}),
 

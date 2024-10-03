@@ -87,12 +87,8 @@ export const EventForm: FC<EventFormProps> = ({ className }) => {
 			};
 
 			if (isEditing) {
-				dispatch(entityCalendarEventActions.updateData({
-					id: selectedEventData.id,
-					data: newEvent,
-				}));
+				dispatch(entityCalendarEventActions.updateData(newEvent));
 			} else {
-				// @ts-ignore
 				dispatch(entityCalendarEventActions.addData(newEvent));
 			}
 
@@ -216,6 +212,7 @@ export const EventForm: FC<EventFormProps> = ({ className }) => {
 						<ColorInput
 							label="Color"
 							placeholder="Color"
+							error={errors.color?.message}
 							{...field}
 						/>
 					)}

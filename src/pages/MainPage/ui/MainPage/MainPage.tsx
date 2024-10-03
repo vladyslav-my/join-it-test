@@ -14,12 +14,11 @@ import {
 	memo,
 	useCallback,
 	useRef,
-	useState,
 	useEffect,
 } from "react";
 import { useSelector } from "react-redux";
 import { AppLayout } from "@/widgets/AppLayout";
-import { entityCalendarEventActions, entityCalendarEventSelectors } from "@/entities/CalendarEvent";
+import { createCleanEventDto, entityCalendarEventActions, entityCalendarEventSelectors } from "@/entities/CalendarEvent";
 import { tableRootElement } from "@/shared/const";
 import { useAppDispatch } from "@/shared/lib/hooks/useAppDispatch/useAppDispatch";
 import { Tooltip } from "../Tooltip/Tooltip";
@@ -32,30 +31,10 @@ export const MainPage: FC = memo(() => {
 	const eventsData = useSelector(entityCalendarEventSelectors.getData);
 	const tableRootElementData = useSelector(entityCalendarEventSelectors.getTableRootElement);
 
-	// Обработчик кликов вне tooltip, чтобы его закрыть
-	// const [tooltipOpened, setTooltipOpened] = useState(false);
-	// useEffect(() => {
-	// 	const handleClickOutside = (event: MouseEvent) => {
-	// 		if (
-	// 			tooltipOpened
-	// 			&& calendarWrapperRef.current
-	// 			&& !calendarWrapperRef.current.contains(event.target as Node)
-	// 		) {
-	// 			setTooltipOpened(false);
-	// 		}
-	// 	};
-
-	// 	document.addEventListener("click", handleClickOutside);
-	// 	return () => {
-	// 		document.removeEventListener("click", handleClickOutside);
-	// 	};
-	// }, [tooltipOpened]);
-
 	const handleDateSelect = useCallback((info: DateSelectArg): void => {
 		dispatch(entityCalendarEventActions.setSelectedData(info));
 		dispatch(entityCalendarEventActions.setIsEditing(false));
 
-		console.log(tableRootElementData);
 		if (tableRootElementData && info.jsEvent) {
 			const calendarRect = tableRootElementData.getBoundingClientRect();
 			const tooltipLeft = info.jsEvent.pageX - calendarRect.left;
@@ -67,17 +46,8 @@ export const MainPage: FC = memo(() => {
 	}, [dispatch, tableRootElementData]);
 
 	const eventChangeHandler = useCallback((info: EventChangeArg): void => {
-		const updatedEvent = {
-			id: info.event.id,
-			title: info.event.title,
-			start: info.event.startStr,
-			end: info.event.endStr,
-			allDay: info.event.allDay,
-			color: info.event.extendedProps.color,
-			notes: info.event.extendedProps.notes,
-		};
-
-		// @ts-ignore
+		const updatedEvent = createCleanEventDto(info.event);
+		console.log(updatedEvent);
 		dispatch(entityCalendarEventActions.updateData(updatedEvent));
 	}, [dispatch]);
 
@@ -90,7 +60,8 @@ export const MainPage: FC = memo(() => {
 	}, []);
 
 	const eventClickHandler = useCallback((info: EventClickArg): void => {
-		dispatch(entityCalendarEventActions.setSelectedData(info.event));
+		const selectedEvent = createCleanEventDto(info.event);
+		dispatch(entityCalendarEventActions.setSelectedData(selectedEvent));
 		dispatch(entityCalendarEventActions.setIsEditing(true));
 
 		if (tableRootElementData) {
@@ -104,7 +75,6 @@ export const MainPage: FC = memo(() => {
 	}, [dispatch, tableRootElementData]);
 
 	useEffect(() => {
-		console.log(calendarRef.current);
 		const tableRootElementVar = document.querySelector(tableRootElement);
 		if (tableRootElementVar) {
 			dispatch(entityCalendarEventActions.setTableRootElement(tableRootElementVar));
