@@ -11,9 +11,9 @@ export function createCleanEventDto(
 	return {
 		id: newId || eventWithDefaults.id || Math.random().toString(),
 		title: eventWithDefaults.title || "",
-		start: eventWithDefaults.start || new Date(),
-		end: eventWithDefaults.end || new Date(),
-		allDay: !(eventWithDefaults.extendedProps?.timeStart && eventWithDefaults.extendedProps?.timeStart),
+		start: eventWithDefaults.start || new Date(new Date().setHours(0, 0, 0, 0)),
+		end: eventWithDefaults.end || new Date((new Date().setHours(0, 0, 0, 0))),
+		allDay: eventWithDefaults.allDay || !(eventWithDefaults.extendedProps?.timeStart && eventWithDefaults.extendedProps?.timeStart),
 		borderColor: eventWithDefaults.extendedProps?.color,
 		extendedProps: {
 			notes: eventWithDefaults.extendedProps?.notes || "",

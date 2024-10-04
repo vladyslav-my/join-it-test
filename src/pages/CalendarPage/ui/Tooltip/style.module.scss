@@ -14,10 +14,18 @@
 
 
 .EventForm {
+   display: flex;
+   flex-direction: column;
+   gap: rem(2);
+
    &__buttons {
       display: flex;
       gap: rem(20);
 
       justify-content: space-between;
+   }
+
+   &__checkbox {
+      align-self: center;
    }
 }

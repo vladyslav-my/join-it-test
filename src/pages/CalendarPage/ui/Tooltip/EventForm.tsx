@@ -1,9 +1,11 @@
-import { Button, ColorInput, TextInput } from "@mantine/core";
+import {
+	Button, ColorInput, TextInput, Checkbox,
+} from "@mantine/core";
 import { TimeInput, DatePickerInput, DateValue } from "@mantine/dates";
 import clsx from "clsx";
 import {
 	FC, useEffect, useCallback,
-	useRef,
+	useRef, useState,
 } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { useSelector } from "react-redux";
@@ -23,6 +25,7 @@ interface FormData {
 	timeEnd: string;
 	notes: string;
 	color: string;
+	allDay: boolean;
 }
 
 export const EventForm: FC<EventFormProps> = ({ className }) => {
@@ -32,9 +35,10 @@ export const EventForm: FC<EventFormProps> = ({ className }) => {
 
 	const colorInputRef = useRef(null);
 	const calendarInputRef = useRef(null);
+	const [isAllDay, setIsAllDay] = useState(false);
 
 	const {
-		handleSubmit, control, reset, formState: { errors }, getValues,
+		handleSubmit, control, reset, formState: { errors }, getValues, watch,
 	} = useForm<FormData>({
 		defaultValues: {
 			title: "",
@@ -43,6 +47,7 @@ export const EventForm: FC<EventFormProps> = ({ className }) => {
 			timeEnd: "",
 			notes: "",
 			color: "#039DFF",
+			allDay: false,
 		},
 		mode: "onBlur",
 	});
@@ -56,21 +61,23 @@ export const EventForm: FC<EventFormProps> = ({ className }) => {
 				timeEnd: formatTime(selectedEventData?.end) || "",
 				notes: selectedEventData.extendedProps?.notes || "",
 				color: selectedEventData?.extendedProps?.color || "#039DFF",
+				allDay: selectedEventData?.allDay || false,
 			});
+			setIsAllDay(selectedEventData?.allDay || false);
 		}
 	}, [selectedEventData, reset]);
 
 	const onSubmit = useCallback((data: FormData) => {
 		if (data.date) {
-			const startDate = createDateWithTime(data.date, data.timeStart)!;
-			const endDate = createDateWithTime(data.date, data.timeEnd)!;
+			const startDate = isAllDay ? data.date : createDateWithTime(data.date, data.timeStart)!;
+			const endDate = isAllDay ? data.date : createDateWithTime(data.date, data.timeEnd)!;
 
 			const newEvent = {
 				id: selectedEventData?.id || Math.random().toString(),
 				title: data.title,
-				start: startDate,
-				end: endDate,
-				allDay: !(data.timeStart && data.timeEnd),
+				start: data.allDay ? startDate : new Date(startDate.setHours(0, 0, 0, 0)),
+				end: data.allDay ? endDate : new Date(endDate.setHours(0, 0, 0, 0)),
+				allDay: data.allDay,
 				borderColor: data.color,
 				extendedProps: {
 					notes: data.notes,
@@ -88,7 +95,7 @@ export const EventForm: FC<EventFormProps> = ({ className }) => {
 
 			dispatch(entityCalendarEventActions.setIsTooltipVisible(false));
 		}
-	}, [dispatch, isEditing, selectedEventData]);
+	}, [dispatch, isEditing, selectedEventData, isAllDay]);
 
 	const onClickDiscard = useCallback(() => {
 		dispatch(entityCalendarEventActions.removeData(selectedEventData.id));
@@ -98,9 +105,6 @@ export const EventForm: FC<EventFormProps> = ({ className }) => {
 	const onClickCancel = useCallback(() => {
 		dispatch(entityCalendarEventActions.setIsTooltipVisible(false));
 	}, [dispatch]);
-
-	useEffect(() => {
-	}, []);
 
 	return (
 		<form className={clsx(cls.EventForm, {}, [className])} onSubmit={handleSubmit(onSubmit)}>
@@ -115,7 +119,21 @@ export const EventForm: FC<EventFormProps> = ({ className }) => {
 				)}
 				<Button color="red" variant="outline" onClick={onClickCancel}>Cancel</Button>
 			</div>
-
+			<Controller
+				name="allDay"
+				control={control}
+				render={({ field }) => (
+					<Checkbox
+						className={cls.EventForm__checkbox}
+						label="All Day"
+						checked={isAllDay}
+						onChange={(event) => {
+							setIsAllDay(event.currentTarget.checked);
+							field.onChange(event.currentTarget.checked);
+						}}
+					/>
+				)}
+			/>
 			<Controller
 				name="title"
 				control={control}
@@ -152,7 +170,7 @@ export const EventForm: FC<EventFormProps> = ({ className }) => {
 				name="timeStart"
 				control={control}
 				rules={{
-					required: "Start time is required",
+					required: !isAllDay && "Start time is required",
 					pattern: {
 						value: /^([01]\d|2[0-3]):([0-5]\d)$/,
 						message: "Invalid time format",
@@ -161,6 +179,7 @@ export const EventForm: FC<EventFormProps> = ({ className }) => {
 				render={({ field }) => (
 					<TimeInput
 						label="Start time"
+						disabled={isAllDay}
 						error={errors.timeStart?.message}
 						{...field}
 					/>
@@ -171,17 +190,17 @@ export const EventForm: FC<EventFormProps> = ({ className }) => {
 				name="timeEnd"
 				control={control}
 				rules={{
-					required: "End time is required",
+					required: !isAllDay && "End time is required",
 					pattern: {
 						value: /^([01]\d|2[0-3]):([0-5]\d)$/,
 						message: "Invalid time format",
 					},
 					validate: (value) => {
-						if (value === getValues("timeStart")) {
+						if (!isAllDay && value === getValues("timeStart")) {
 							return "Start time and end time cannot be the same";
 						}
 
-						if (value < getValues(("timeStart"))) {
+						if (!isAllDay && value < getValues(("timeStart"))) {
 							return "End time cannot be earlier than start time";
 						}
 						return true;
@@ -190,12 +209,12 @@ export const EventForm: FC<EventFormProps> = ({ className }) => {
 				render={({ field }) => (
 					<TimeInput
 						label="End time"
+						disabled={isAllDay}
 						error={errors.timeEnd?.message}
 						{...field}
 					/>
 				)}
 			/>
-
 			<Controller
 				name="notes"
 				control={control}
@@ -225,7 +244,6 @@ export const EventForm: FC<EventFormProps> = ({ className }) => {
 						ref={colorInputRef}
 					/>
 				)}
-
 			/>
 		</form>
 	);

@@ -45,7 +45,6 @@ export const CalendarPage: FC = memo(() => {
 		const updatedEvent = createCleanEventDto(info);
 		dispatch(entityCalendarEventActions.setSelectedData(updatedEvent));
 		dispatch(entityCalendarEventActions.setIsEditing(false));
-
 		showTooltip(info.jsEvent);
 	}, [dispatch, showTooltip]);
 
