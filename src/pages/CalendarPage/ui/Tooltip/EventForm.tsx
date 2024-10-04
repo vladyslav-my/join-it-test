@@ -75,8 +75,8 @@ export const EventForm: FC<EventFormProps> = ({ className }) => {
 			const newEvent = {
 				id: selectedEventData?.id || Math.random().toString(),
 				title: data.title,
-				start: data.allDay ? startDate : new Date(startDate.setHours(0, 0, 0, 0)),
-				end: data.allDay ? endDate : new Date(endDate.setHours(0, 0, 0, 0)),
+				start: !data.allDay ? startDate : new Date(startDate.setHours(0, 0, 0, 0)),
+				end: !data.allDay ? endDate : new Date(endDate.setHours(0, 0, 0, 0)),
 				allDay: data.allDay,
 				borderColor: data.color,
 				extendedProps: {
